@@ -8,6 +8,8 @@ from aiida_restapi.graphql.plugins import QueryPlugin
 
 from .comments import CommentsQuery
 from .logs import LogsQuery
+from .nodes import LinkQuery, LinksQuery
+
 from .orm_factories import (
     ENTITY_DICT_TYPE,
     fields_from_name,
@@ -16,21 +18,6 @@ from .orm_factories import (
     single_cls_factory,
 )
 from .utils import JSON, FilterString
-
-Link = type("LinkObjectType", (gr.ObjectType,), fields_from_name("Link"))
-
-
-class LinkQuery(gr.ObjectType):
-    """A link and its end node."""
-
-    link = gr.Field(Link)
-    # note: we must refer to this query using a string, to prevent circular dependencies
-    node = gr.Field("aiida_restapi.graphql.nodes.NodeQuery")
-
-
-class LinksQuery(multirow_cls_factory(LinkQuery, orm.nodes.Node, "nodes")):  # type: ignore[misc]
-    """Query all AiiDA Links."""
-
 
 class ProcessQuery(
     single_cls_factory(orm.ProcessNode, exclude_fields=("attributes", "extras"))  # type: ignore[misc]
