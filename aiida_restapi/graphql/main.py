@@ -9,6 +9,7 @@ from .entry_points import aiidaEntryPointGroupsPlugin, aiidaEntryPointsPlugin
 from .groups import GroupQueryPlugin, GroupsQueryPlugin
 from .logs import LogQueryPlugin, LogsQueryPlugin
 from .nodes import NodeQueryPlugin, NodesQueryPlugin
+from .processes import ProcessQueryPlugin, ProcessesQueryPlugin
 from .plugins import create_schema
 from .users import UserQueryPlugin, UsersQueryPlugin
 
@@ -28,6 +29,8 @@ SCHEMA = create_schema(
         LogsQueryPlugin,
         NodeQueryPlugin,
         NodesQueryPlugin,
+        ProcessQueryPlugin,
+        ProcessesQueryPlugin,
         UserQueryPlugin,
         UsersQueryPlugin,
     ]

@@ -11,6 +11,8 @@ from aiida_restapi.filter_syntax import parse_filter_str
 from aiida_restapi.graphql.plugins import QueryPlugin
 
 from .nodes import NodesQuery
+from .processes import ProcessesQuery
+
 from .orm_factories import (
     ENTITY_DICT_TYPE,
     multirow_cls_factory,
@@ -24,6 +26,7 @@ class ComputerQuery(single_cls_factory(Computer)):  # type: ignore[misc]
     """Query an AiiDA Computer"""
 
     nodes = gr.Field(NodesQuery, filters=FilterString())
+    processes = gr.Field(ProcessesQuery, filters=FilterString())
 
     @staticmethod
     def resolve_nodes(
@@ -34,6 +37,17 @@ class ComputerQuery(single_cls_factory(Computer)):  # type: ignore[misc]
         parsed_filters = parse_filter_str(filters)
         parsed_filters["dbcomputer_id"] = parent["id"]
         return {"filters": parsed_filters}
+
+    @staticmethod
+    def resolve_processes(
+        parent: Any, info: gr.ResolveInfo, filters: Optional[str] = None
+    ) -> dict:
+        """Resolution function."""
+        # pass filter specification to NodesQuery
+        parsed_filters = parse_filter_str(filters)
+        parsed_filters["dbcomputer_id"] = parent["id"]
+        return {"filters": parsed_filters}
+    
 
 
 class ComputersQuery(multirow_cls_factory(ComputerQuery, Computer, "computers")):  # type: ignore[misc]

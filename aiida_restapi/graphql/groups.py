@@ -23,13 +23,14 @@ from .utils import FilterString
 class GroupQuery(single_cls_factory(Group)):  # type: ignore[misc]
     """Query an AiiDA Group"""
 
-    nodes = gr.Field(NodesQuery)
+    nodes = gr.Field(NodesQuery, filters=FilterString())
 
     @staticmethod
-    def resolve_nodes(parent: Any, info: gr.ResolveInfo) -> dict:
+    def resolve_nodes(parent: Any, info: gr.ResolveInfo, filters: Optional[str] = None) -> dict:
         """Resolution function."""
-        # pass group specification to NodesQuery
-        return {"group_id": parent["id"]}
+        # pass filter specification to NodesQuery
+        parsed_filters = parse_filter_str(filters)
+        return {"group_id": parent["id"], "filters": parsed_filters}
 
 
 class GroupsQuery(multirow_cls_factory(GroupQuery, Group, "groups")):  # type: ignore[misc]
